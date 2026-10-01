@@ -1,26 +1,285 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+  Al-Batin design tokens — editorial light theme.
+  Warm off-white canvas, charcoal ink, deep maroon (sampled from the logo) used as an accent only.
+  Display type is a high-contrast serif (Arabic: Naskh); body type is a geometric sans
+  (Arabic: IBM Plex Sans Arabic). Both swap automatically on :lang(ar) via --display-face/--body-face.
+  Shape rule: cards 16-20px, buttons and chips fully rounded, icon badges circles.
+  Motion animates transform/opacity only and is switched off for prefers-reduced-motion.
+*/
+@theme {
+  --color-brand-50: #fbf1f2;
+  --color-brand-100: #f5e0e3;
+  --color-brand-200: #e9bfc5;
+  --color-brand-300: #d48f99;
+  --color-brand-500: #a3213a;
+  --color-brand-600: #8c1a30;
+  --color-brand-700: #7a1629;
+  --color-brand-800: #5f1120;
+  --color-brand-900: #3f0b15;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-ink: #19191c;
+  --color-ink-soft: #3a3a3f;
+  --color-muted: #6a6862;
+  --color-line: #e6e1d9;
+  --color-surface: #efebe4;
+  --color-paper: #f6f4f0;
+  --color-card: #fcfbf9;
+  --color-copper: #b5855c;
+  --color-slate: #8b9099;
+  --color-night: #15161a;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --font-sans: var(--body-face);
+  --font-display: var(--display-face);
+
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --shadow-card-rest: 0 1px 2px rgba(25, 25, 28, 0.04);
+  --shadow-card-hover: 0 22px 44px -24px rgba(25, 25, 28, 0.28);
+  --shadow-elevated: 0 1px 1px rgba(25, 25, 28, 0.03), 0 14px 34px -18px rgba(25, 25, 28, 0.2);
+  --shadow-float: 0 40px 80px -36px rgba(25, 25, 28, 0.4);
+  --shadow-brand: 0 14px 30px -14px rgba(122, 22, 41, 0.55);
+
+  --animate-hero-in: hero-in 0.8s var(--ease-out-soft) both;
+  --animate-fade-in: fade-in 0.7s var(--ease-out-soft) both;
+  --animate-page-in: page-in 0.45s var(--ease-out-soft) both;
+  --animate-pop-in: pop-in 0.9s var(--ease-spring) both;
+  --animate-marquee: marquee 40s linear infinite;
+
+  @keyframes hero-in {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes page-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes pop-in {
+    from { opacity: 0; transform: scale(0.6); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+:root {
+  --display-face: var(--font-dm-serif), "Times New Roman", Georgia, serif;
+  --body-face: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+}
+:root:lang(ar) {
+  --display-face: var(--font-naskh), var(--font-plex-arabic), serif;
+  --body-face: var(--font-plex-arabic), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    color-scheme: light;
+    scroll-behavior: smooth;
+  }
+  body {
+    /* Safety net against sideways overflow from floating layers; `clip` keeps position: sticky working. */
+    overflow-x: clip;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4 {
+    font-weight: 500;
+    text-wrap: balance;
+  }
+  p { text-wrap: pretty; }
+  :lang(ar) p, :lang(ar) li { line-height: 1.85; }
+  ::selection { background: var(--color-brand-100); color: var(--color-brand-800); }
+  :focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 3px;
+    border-radius: 10px;
+  }
+  [id] { scroll-margin-top: 104px; }
+}
+
+/* Editorial display headline: serif, tight, with an italic maroon accent phrase. */
+@utility font-display-tight {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.04;
+  &:lang(ar) { letter-spacing: 0; line-height: 1.35; font-weight: 600; }
+}
+@utility accent {
+  font-style: italic;
+  color: var(--color-brand-700);
+  &:lang(ar) { font-style: normal; }
+}
+
+/* Small uppercase kicker above section titles (the reference's "SERVICES & FLEET"). */
+@utility kicker {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-brand-700);
+  &:lang(ar) { letter-spacing: 0; font-size: 0.875rem; }
+}
+
+@utility container-x {
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (width >= 40rem) { padding-inline: 1.5rem; }
+  @media (width >= 64rem) { padding-inline: 2rem; }
+}
+
+@utility prose-body {
+  color: var(--color-muted);
+  line-height: 1.8;
+  & p + p { margin-top: 1.1em; }
+}
+
+/* Fine dot field used on the warm bands (stats, safety, quote). */
+@utility bg-dots {
+  background-image: radial-gradient(rgb(122 22 41 / 0.13) 1px, transparent 1.2px);
+  background-size: 14px 14px;
+}
+@utility bg-dots-light {
+  background-image: radial-gradient(rgb(255 255 255 / 0.09) 1px, transparent 1.2px);
+  background-size: 14px 14px;
+}
+
+@utility mask-x {
+  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+}
+@utility mask-fade-b {
+  mask-image: linear-gradient(to bottom, #000 55%, transparent);
+}
+
+@utility hover-pause {
+  &:hover, &:focus-within { animation-play-state: paused; }
+  &:hover *, &:focus-within * { animation-play-state: paused; }
+}
+
+/* Mirror directional icons (arrows, carets) in RTL. */
+@utility flip-rtl {
+  &:where([dir="rtl"], [dir="rtl"] *) { transform: scaleX(-1); }
+}
+
+/* ------------------------------------------------------------------ */
+/* Scroll reveal. Hidden only after JS flags <html class="js">.        */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+      opacity 0.8s var(--ease-out-soft),
+      transform 0.8s var(--ease-out-soft);
+    transition-delay: calc(var(--reveal-delay, 0) * 80ms);
+  }
+  .js [data-reveal="image"] {
+    transform: none;
+    clip-path: inset(8% 6% 8% 6% round 20px);
+    transition:
+      opacity 0.9s var(--ease-out-soft),
+      clip-path 0.9s var(--ease-out-soft);
+  }
+  .js [data-reveal="image"] img { transform: scale(1.06); transition: transform 1.1s var(--ease-out-soft); }
+  .js [data-reveal="scale"] { transform: translateY(16px) scale(0.96); }
+  .js [data-reveal].is-in { opacity: 1; transform: none; }
+  .js [data-reveal="image"].is-in { clip-path: inset(0 0 0 0 round 20px); }
+  .js [data-reveal="image"].is-in img { transform: scale(1); }
+
+  /* Headline words rise in one after another; delay from the inline --d. */
+  .word-rise > span {
+    display: inline-block;
+    animation: word-rise 0.9s var(--ease-out-soft) both;
+    animation-delay: var(--d, 0ms);
+  }
+  @keyframes word-rise {
+    from { opacity: 0; transform: translateY(0.45em); filter: blur(6px); }
+    to   { opacity: 1; transform: none; filter: blur(0); }
+  }
+
+  /* Highlighted pill unrolls from its start edge. */
+  .pill-in {
+    animation: pill-in 1s var(--ease-out-soft) both;
+    animation-delay: var(--d, 600ms);
+  }
+  @keyframes pill-in {
+    from { opacity: 0; clip-path: inset(0 100% 0 0 round 18px); transform: rotate(-1.5deg) scale(0.96); }
+    to   { opacity: 1; clip-path: inset(0 0 0 0 round 18px); transform: rotate(-1.5deg); }
+  }
+  [dir="rtl"] .pill-in { animation-name: pill-in-rtl; }
+  @keyframes pill-in-rtl {
+    from { opacity: 0; clip-path: inset(0 0 0 100% round 18px); transform: rotate(1.5deg) scale(0.96); }
+    to   { opacity: 1; clip-path: inset(0 0 0 0 round 18px); transform: rotate(1.5deg); }
+  }
+
+  /* Ambient float for orbiting hero badges. Uses `translate` so pointer parallax (on `transform`
+     of a parent) never fights it. Duration/delay come from inline vars for an organic rhythm. */
+  .float-y {
+    animation: float-y var(--float-dur, 7s) ease-in-out infinite;
+    animation-delay: var(--float-delay, 0s);
+  }
+  @keyframes float-y {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 var(--float-amp, -12px); }
+  }
+
+  /* Slow spin for the dotted orbit rings. */
+  .spin-slow { animation: spin-slow 38s linear infinite; }
+  @keyframes spin-slow { to { rotate: 360deg; } }
+
+  /* Gentle bob used for product imagery on light stages. */
+  .bob {
+    animation: bob 6s ease-in-out infinite;
+    animation-delay: var(--float-delay, 0s);
+  }
+  @keyframes bob {
+    0%, 100% { translate: 0 0; rotate: -1deg; }
+    50% { translate: 0 -10px; rotate: 1deg; }
+  }
+}
+
+/* Static fallback for the pill when animations are off. */
+.pill-static { transform: rotate(-1.5deg); }
+[dir="rtl"] .pill-static { transform: rotate(1.5deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Header gains a frosted surface after the page leaves the top. */
+.header-shell[data-scrolled="true"] {
+  background: rgb(246 244 240 / 0.82);
+  box-shadow: 0 1px 0 var(--color-line), 0 18px 40px -30px rgba(25, 25, 28, 0.35);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+}
+
+/* Reading progress along the header (CSS scroll timeline where supported). */
+.scroll-progress { transform: scaleX(0); transform-origin: 0 50%; }
+[dir="rtl"] .scroll-progress { transform-origin: 100% 50%; }
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-progress {
+      animation: scroll-progress linear both;
+      animation-timeline: scroll(root);
+    }
+    @keyframes scroll-progress { to { transform: scaleX(1); } }
+  }
 }
