@@ -45,3 +45,5 @@ info@albatinindus.com.
 URLs match the old WordPress site (trailing slashes, same slugs). Old `/service/...` links and the old profile PDF
 path redirect permanently (`next.config.ts`). Sitemap: `/sitemap.xml`; robots: `/robots.txt`. Structured data:
 LocalBusiness (every page), BreadcrumbList (inner pages), Product (product pages).
+
+# alibaba
